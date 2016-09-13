@@ -1,5 +1,10 @@
 package edu.madisoncollege.entjava;
 
+import org.apache.log4j.*;
+import java.util.*;
+import java.io.*;
+
+
 
 /**
  * Created by paulawaite on 9/7/16.
@@ -36,6 +41,56 @@ package edu.madisoncollege.entjava;
  */
 
 public class SantaInAnElevator {
+
+    private final Logger logger = Logger.getLogger(this.getClass());
+
+    public List loadDirections() {
+
+        List directions = new ArrayList();
+        ClassLoader loader = getClass().getClassLoader();
+        File file = new File(loader.getResource("SantaUpDown.txt").getFile());
+
+        try {
+
+
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while(reader.ready()) {
+                directions = Arrays.asList(reader.readLine().split(""));
+            }
+
+        } catch (FileNotFoundException error) {
+            logger.error("File Not Found Exception Thrown", error);
+        } catch (IOException error) {
+            logger.error("IO Exception Thrown", error);
+        } catch (Exception error) {
+            logger.error("General Exception Thrown", error);
+        }
+
+        logger.info("directions: " + directions.toString());
+
+
+        return directions;
+    }
+
+    public int determineFloor(List<String> directions){
+        int floorNumber = 0;
+
+
+        for (String direction:
+             directions) {
+            if (direction.equals("(")) {
+                floorNumber++;
+            } else if (direction.equals(")")) {
+                floorNumber--;
+            }
+        }
+
+        logger.info("Floor number is: " + floorNumber);
+
+        return floorNumber;
+    }
 
 
 }
